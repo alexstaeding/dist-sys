@@ -168,7 +168,7 @@
   - *Q1: Which key-value pairs are stored on which hosts?* #pause
   - *Q2: How can we find a remote key-value pair?*
 
-== 4 bit DHT
+= 4-Bit DHT
 
 #slide(
   repeat: 3,
@@ -222,15 +222,23 @@
 )
 
 == XOR
+
 #align(center)[
   #image("../resources/XOR_ANSI.svg", width: 30%)
   #pause
   #block(
+    width: 40%,
+    inset: 8pt,
+    stroke: 1pt,
+    radius: 10pt,
     table(
       stroke: none,
       columns: (1fr, 1fr, 1fr),
-      rows: (1fr, 1fr, 1fr, 1fr),
       table.header([*A*], [*B*], [*$A xor B$*]),
+      [0], [0], [0],
+      [0], [1], [1],
+      [1], [0], [1],
+      [1], [1], [0],
     ),
   )
 ]
