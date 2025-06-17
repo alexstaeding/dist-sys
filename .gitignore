@@ -1,3 +1,4 @@
 .vscode/
 *.pdfpc
+*.pdf
 .DS_Store
