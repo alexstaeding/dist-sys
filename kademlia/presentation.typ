@@ -164,40 +164,52 @@
 
 = 4-Bit DHT
 
-#slide(
-  repeat: 4,
-  self => [
-    #pdfpc.speaker-note(```md
-      ## Slide 1 - Simple DHT
+#slide({
+  pdfpc.speaker-note(```md
+  ## Slide 1 - Simple DHT
 
-      - A 4 bit DHT is nice, because there are only 16 values
+  - A 4 bit DHT is nice, because there are only 16 values
+  ```)
+  dht-4-bit.gen-slide(1)
+})
 
-      ## Slide 2 - Convert to binary
+#slide({
+  pdfpc.speaker-note(```md
+  ## Slide 2 - Convert to binary
+  ```)
+  dht-4-bit.gen-slide(2)
+})
 
-      ## Slide 3 - Add values
+#slide({
+  pdfpc.speaker-note(```md
+  ## Slide 3 - Add values
 
-      - We now place some values at the position corresponding to their key
-      - Key value pairs
-      - Values could be anything
+  - We now place some values at the position corresponding to their key
+  - Key value pairs
+  - Values could be anything
 
-      ### Problem: Computers do not intrinsically relate to anything in the keyspace
+  ### Problem: Computers do not intrinsically relate to anything in the keyspace
 
-      - Computers exist in the physical realm
-      - So far, everything has been in a "keyspace"
-      - How do we connect them?
-      - Solution: put the computers in the keyspace!
+  - Computers exist in the physical realm
+  - So far, everything has been in a "keyspace"
+  - How do we connect them?
+  - Solution: put the computers in the keyspace!
+  ```)
+  dht-4-bit.gen-slide(3)
+})
 
-      ## Slide 4 - Each computer gets an identity in the keyspace
+#slide({
+  pdfpc.speaker-note(```md
+  ## Slide 4 - Each computer gets an identity in the keyspace
 
-      - Unlike key-value pairs, the hash does not have to match a specific property of the object
-      - Can be pseudorandom, e.g. hashing some device identifiers
-      - Most modern hash functions distribute their outputs well, so over time, this will work well
-      - Must be the same size as keys in the keyspace
-      - Of course, we assume no collisions (with other nodes, and with key-value pairs)
-    ```)
-    #dht-4-bit.gen-slide(self.subslide)
-  ],
-)
+  - Unlike key-value pairs, the hash does not have to match a specific property of the object
+  - Can be pseudorandom, e.g. hashing some device identifiers
+  - Most modern hash functions distribute their outputs well, so over time, this will work well
+  - Must be the same size as keys in the keyspace
+  - Of course, we assume no collisions (with other nodes, and with key-value pairs)
+  ```)
+  dht-4-bit.gen-slide(4)
+})
 
 == Distance
 
