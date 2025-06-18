@@ -9,6 +9,7 @@
 #import "@preview/oxifmt:1.0.0": strfmt
 #import "../utils.typ": *
 #import "../common/diagram/network.typ"
+#import "chapters/dht-4-bit.typ"
 
 // Pdfpc configuration
 // typst query --root . ./example.typ --field value --one "<pdfpc-file>" > ./example.pdfpc
@@ -185,7 +186,7 @@
       - So far, everything has been in a "keyspace"
       - How do we connect them?
       - Solution: put the computers in the keyspace!
-      
+
       ## Slide 4 - Each computer gets an identity in the keyspace
 
       - Unlike key-value pairs, the hash does not have to match a specific property of the object
@@ -194,56 +195,7 @@
       - Must be the same size as keys in the keyspace
       - Of course, we assume no collisions (with other nodes, and with key-value pairs)
     ```)
-    #let numBits = 4
-    #let numEntries = calc.pow(2, 4)
-    #align(center)[
-      #canvas(
-        length: 1.7cm,
-        {
-          import draw: *
-          range(numEntries)
-            .map(x => {
-              // numbers above the line
-              content(
-                (x, 1),
-                [#x],
-              )
-              line((x, -0.5), (x, 0.5))
-              content(
-                (x, -0.9),
-                [#if self.subslide > 1 { strfmt("{:04b}", x) }],
-              )
-            })
-            .join()
-          // main middle line
-          line((0, 0), (numEntries - 1, 0))
-          let put-value(i, cont) = {
-            fill(aqua)
-            circle((i, -1.7), radius: 0.35)
-            content((i, -1.7), cont)
-          }
-          let put-node(i, cont) = {
-            content((i, -1.7), fa-laptop(size: 35pt))
-            content((i, -1.65), cont)
-          }
-          if self.subslide >= 3 {
-            put-value(2, [a])
-            put-value(3, [b])
-            put-value(7, [c])
-            put-value(11, [d])
-            put-value(13, [e])
-            put-value(15, [f])
-          }
-          if self.subslide >= 4 {
-            put-node(1, [n1])
-            put-node(5, [n2])
-            put-node(10, [n3])
-            put-node(12, [n4])
-            put-node(14, [n5])
-          }
-        },
-      )
-    ]
+    #dht-4-bit.gen-slide(self.subslide)
   ],
 )
 
