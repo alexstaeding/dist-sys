@@ -19,13 +19,6 @@
   last-minutes: 5,
   note-font-size: 12,
   disable-markdown: false,
-  default-transition: (
-    type: "push",
-    duration-seconds: 2,
-    angle: ltr,
-    alignment: "vertical",
-    direction: "inward",
-  ),
 )
 
 #let proof = thmproof("proof", "Proof")
@@ -164,15 +157,43 @@
   ],
 )
 
-- The size of the hash table can exceed the capabilities of a single host
+- The size of the hash table can exceed the capabilities of a single host #pause
   - *Q1: Which key-value pairs are stored on which hosts?* #pause
   - *Q2: How can we find a remote key-value pair?*
 
 = 4-Bit DHT
 
 #slide(
-  repeat: 3,
+  repeat: 4,
   self => [
+    #pdfpc.speaker-note(```md
+      ## Slide 1 - Simple DHT
+
+      - A 4 bit DHT is nice, because there are only 16 values
+
+      ## Slide 2 - Convert to binary
+
+      ## Slide 3 - Add values
+
+      - We now place some values at the position corresponding to their key
+      - Key value pairs
+      - Values could be anything
+
+      ### Problem: Computers do not intrinsically relate to anything in the keyspace
+
+      - Computers exist in the physical realm
+      - So far, everything has been in a "keyspace"
+      - How do we connect them?
+      - Solution: put the computers in the keyspace!
+      
+      ## Slide 4 - Each computer gets an identity in the keyspace
+
+      - Unlike key-value pairs, the hash does not have to match a specific property of the object
+      - Can be pseudorandom, e.g. hashing some device identifiers
+      - Most modern hash functions distribute their outputs well, so over time, this will work well
+      - Must be the same size as keys in the keyspace
+      - Of course, we assume no collisions (with other nodes, and with key-value pairs)
+    ```)
     #let numBits = 4
     #let numEntries = calc.pow(2, 4)
     #align(center)[
@@ -185,22 +206,25 @@
               // numbers above the line
               content(
                 (x, 1),
-                [#if self.subslide == 1 { x } else { strfmt("{:04b}", x) }],
+                [#x],
               )
-              // main middle line
               line((x, -0.5), (x, 0.5))
+              content(
+                (x, -0.9),
+                [#if self.subslide > 1 { strfmt("{:04b}", x) }],
+              )
             })
             .join()
+          // main middle line
           line((0, 0), (numEntries - 1, 0))
-          // a
           let put-value(i, cont) = {
             fill(aqua)
-            circle((i, -1.1), radius: 0.35)
-            content((i, -1.1), cont)
+            circle((i, -1.7), radius: 0.35)
+            content((i, -1.7), cont)
           }
           let put-node(i, cont) = {
-            content((i, -1.1), fa-laptop(size: 35pt))
-            content((i, -1.05), cont)
+            content((i, -1.7), fa-laptop(size: 35pt))
+            content((i, -1.65), cont)
           }
           if self.subslide >= 3 {
             put-value(2, [a])
@@ -209,6 +233,8 @@
             put-value(11, [d])
             put-value(13, [e])
             put-value(15, [f])
+          }
+          if self.subslide >= 4 {
             put-node(1, [n1])
             put-node(5, [n2])
             put-node(10, [n3])
@@ -220,6 +246,11 @@
     ]
   ],
 )
+
+== Distance
+
+Nodes are responsible for nearby values #pause
+- *How is distance measured?*
 
 == XOR
 
