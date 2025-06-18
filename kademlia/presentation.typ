@@ -10,6 +10,7 @@
 #import "../utils.typ": *
 #import "../common/diagram/network.typ"
 #import "chapters/dht-4-bit.typ"
+#import "chapters/xor-example.typ"
 
 // Pdfpc configuration
 // typst query --root . ./example.typ --field value --one "<pdfpc-file>" > ./example.pdfpc
@@ -236,4 +237,14 @@ Nodes are responsible for nearby values #pause
       [1], [1], [0],
     ),
   )
+]
+
+== XOR Example
+
+#align(center)[
+  #xor-example.gen("hello", "there", 1)
+]
+
+#align(center)[
+  #xor-example.gen("hello", "there", 4)
 ]
