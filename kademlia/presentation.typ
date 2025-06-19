@@ -396,15 +396,94 @@ XOR is a valid distance metric #pause
 
 == K-Buckets
 
-#canvas({
-  import draw: *
-})
+#slide(
+  repeat: 4,
+  self => [
+    #align(center + top)[
+      #v(0.5cm)
+      #canvas(
+        length: 0.8cm,
+        {
+          import draw: *
+          line((0, 0), (16, 0))
+          content((8, 0.5))[Space of 160-bit ID numbers]
+          content((0, 0.5))[$11 ... 11$]
+          content((16, 0.5))[$00 ... 00$]
+          if self.subslide >= 1 {
+            // stage 1
+            rect((0, -1), (16, -2))
+          }
+          if self.subslide >= 2 {
+            // stage 2
+            line((8, -2.5), (4, -3.5))
+            line((8, -2.5), (12, -3.5))
+            content((4, -3))[1]
+            rect((0, -3.5), (8, -4.5))
+            content((12, -3))[0]
+            rect((8, -3.5), (16, -4.5))
+          }
+          if self.subslide >= 3 {
+            // stage 3
+            line((8, -5.5), (4, -6.5))
+            line((8, -5.5), (12, -6.5))
+            content((4, -6))[1]
+            rect((0, -6.5), (8, -7.5))
+            content((12, -6))[0]
+
+            line((12, -6.5), (10, -8))
+            line((12, -6.5), (14, -8))
+            rect((8, -8), (12, -9))
+            rect((12, -8), (16, -9))
+            content((10, -7.5))[1]
+            content((14, -7.5))[0]
+          }
+          if self.subslide >= 4 {
+            // stage 4
+            line((8, -10), (4, -11))
+            line((8, -10), (12, -11))
+            content((4, -10.5))[1]
+            rect((0, -11), (8, -12))
+            content((12, -10.5))[0]
+
+            line((12, -11), (10, -12.5))
+            line((12, -11), (14, -12.5))
+            rect((8, -12.5), (12, -13.5))
+            content((10, -12))[1]
+
+            line((14, -12.5), (13, -14))
+            line((14, -12.5), (15, -14))
+            rect((12, -14), (14, -15))
+            rect((14, -14), (16, -15))
+            content((13, -13.5))[1]
+            content((15, -13.5))[0]
+          }
+        },
+      )
+    ]
+  ],
+)
 
 == Routing, cont.
 
 Nodes retain more routing information about closer nodes #pause
-- First, take large rough steps
+- First, take large rough hops
 - Eventually, hops become smaller
+
 #pause
+
 #v(2cm)
+#dht-4-bit.gen-hops(((1, 10, 2), (10, 12, 0.75), (12, 13, 0.5)))
 #dht-4-bit.gen-small()
+
+= RPCs
+
+== RPC Overview
+
+Four primary remote procedure calls
+- _ping_
+- _store_
+- _find\_node_
+- _find\_value_
+
+// TODO: describe node lookup
+// TODO: load balancing by re-storing values

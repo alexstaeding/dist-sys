@@ -102,6 +102,23 @@
   ]
 }
 
+#let gen-hops(hops) = {
+  align(center)[
+    #canvas(
+      length: 1.7cm,
+      {
+        import draw: *
+        // to align with previous canvas
+        line((-0.5, 0), (15.5, 0), stroke: none)
+        for (start, end, h) in hops {
+          assert(start < end)
+          bezier((start, 0), (end, 0), (start + (end - start) / 2, h))
+        }
+      },
+    )
+  ]
+}
+
 #let gen-calc-distance(a, b) = {
   assert(a < b)
   align(center)[
