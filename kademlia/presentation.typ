@@ -204,7 +204,8 @@
   ## Slide 4 - Each computer gets an identity in the keyspace
 
   - Unlike key-value pairs, the hash does not have to match a specific property of the object
-  - Can be pseudorandom, e.g. hashing some device identifiers
+    - They are opaque
+    - Can be pseudorandom, e.g. hashing some device identifiers
   - Most modern hash functions distribute their outputs well, so over time, this will work well
   - Must be the same size as keys in the keyspace
   - Of course, we assume no collisions (with other nodes, and with key-value pairs)
@@ -248,3 +249,162 @@ Nodes are responsible for nearby values #pause
 #align(center)[
   #xor-example.gen("hello", "there", 4)
 ]
+
+== Distance Metric
+
+XOR is a valid distance metric #pause
+- Distance to self is 0
+- Distance to anything else $> 0$
+- Satisfies the triangle property
+  - $d(a, b) + d(b, c) >= d(a, c)$
+
+== Distance Example 1
+
+#dht-4-bit.gen-slide(4)
+#dht-4-bit.gen-calc-distance(5, 7)
+
+== Distance Example 2
+
+#dht-4-bit.gen-slide(4)
+#dht-4-bit.gen-calc-distance(5, 13)
+
+== Distance Example 3
+
+#pdfpc.speaker-note(```md
+- In this example, the xor distance does not directly relate to the distance on the line
+- Problem: Hamming distance between adjacent entries is not always 1
+  - Sometimes it is, but look at the change from 7 to 8. The carry is the problem
+- Gray code, where only 1 bit changes for adjacent entries would fix this
+```)
+#dht-4-bit.gen-slide(4)
+#dht-4-bit.gen-calc-distance(11, 12)
+
+== Distance Example 4
+#dht-4-bit.gen-slide(4)
+#dht-4-bit.gen-calc-distance(4, 5)
+= Routing
+
+#slide[
+  #quote(attribution: "Petar Maymounkov and David Mazinères", block: true)[
+    Kademlia nodes store contact information about each other to route query messages.
+    For each $0 <= i < 160$, every node keeps a list of
+    $<$IP address, UDP port, Node ID$>$
+    triples for nodes of distance between $2^i$ and $2^(i+1)$ from itself.
+    We call these lists $k$-buckets.
+  ]
+]
+
+#slide[
+  #align(center)[
+    #block(width: 40%)[
+      *Great distributed systems embed global properties into algorithms that work locally.*
+    ]
+  ]
+]
+
+== Distance tree
+
+#slide(
+  repeat: 8,
+  self => [
+    *Global State*
+    #dht-4-bit.gen-small()
+    #align(center)[
+      #canvas(
+        length: 1.9cm,
+        {
+          import draw: *
+          line((0, 0), (15, 0))
+        },
+      )
+    ]
+    #pause
+    #stack(
+      dir: ltr,
+      spacing: 0.5cm,
+      [*Local State*],
+      canvas({
+        import draw: *
+        content((0, -1.7), fa-laptop(size: 35pt))
+        content((0, -1.65), [n3])
+      }),
+    )
+    #v(-1.5cm)
+    #align(center)[
+      #canvas(
+        length: 1.6cm,
+        {
+          let gen-children(height) = {
+            if height > 0 {
+              let children = gen-children(height - 1)
+              (([1], ..children), ([0], ..children))
+            } else { () }
+          }
+          import draw: *
+          set-style(content: (padding: .1))
+          tree.tree(
+            grow: 0.6,
+            (
+              [],
+              ..gen-children(4),
+            ),
+          )
+          let put-node(i, cont, fill: black) = {
+            content((i, -3.05), fa-laptop(size: 28pt, fill: fill))
+            content((i, -3), text(cont, size: 17pt, fill: fill))
+          }
+          if self.subslide >= 4 {
+            put-node(15, "n3")
+          }
+          let put-n-line(x, i) = {
+            line((x, -2.3), (x, -3.3), stroke: red)
+            content((x, -3.7), $2^#i$)
+          }
+          if self.subslide >= 6 {
+            put-n-line(14.5, 0)
+            put-n-line(13.5, 1)
+            put-n-line(11.5, 2)
+            put-n-line(7.5, 3)
+            put-n-line(-0.5, 4)
+          }
+          if self.subslide >= 7 {
+            put-node(14, "n2")
+            put-node(11, "n1")
+            put-node(0, "n4")
+            put-node(6, "n5")
+          }
+          if self.subslide == 7 {
+            put-node(4, "n6")
+          }
+          if self.subslide >= 8 {
+            put-node(4, "n6", fill: luma(180))
+          }
+        },
+      )
+      #if self.subslide == 3 {
+        [*Where is n3?*]
+      } else if self.subslide == 5 {
+        v(-0.5cm)
+        quote([... for each $0 <= i < 160$ ... nodes of distance between $2^i$ and $2^(i+1)$ from itself])
+      } else if self.subslide == 8 {
+        v(-0.8cm)
+        move(dx: -5.5cm)[*$K = 2$*]
+      }
+    ]
+  ],
+)
+
+== K-Buckets
+
+#canvas({
+  import draw: *
+})
+
+== Routing, cont.
+
+Nodes retain more routing information about closer nodes #pause
+- First, take large rough steps
+- Eventually, hops become smaller
+#pause
+#v(2cm)
+#dht-4-bit.gen-small()
