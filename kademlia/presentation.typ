@@ -13,13 +13,13 @@
 #import "chapters/xor-example.typ"
 
 // Pdfpc configuration
-// typst query --root . ./example.typ --field value --one "<pdfpc-file>" > ./example.pdfpc
+// typst query --root .. ./presentation.typ --field value --one "<pdfpc-file>" > ./presentation.pdfpc
 #let pdfpc-config = pdfpc.config(
   duration-minutes: 30,
-  start-time: datetime(hour: 14, minute: 10, second: 0),
-  end-time: datetime(hour: 14, minute: 40, second: 0),
+  start-time: datetime(hour: 11, minute: 00, second: 0),
+  end-time: datetime(hour: 11, minute: 45, second: 0),
   last-minutes: 5,
-  note-font-size: 12,
+  note-font-size: 14,
   disable-markdown: false,
 )
 
