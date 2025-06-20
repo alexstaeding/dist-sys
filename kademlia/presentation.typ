@@ -35,7 +35,7 @@
   ),
   config-info(
     title: [Kademlia],
-    subtitle: [How do distributed hash tables work?],
+    subtitle: [A Peer-to-peer Information System Based on the XOR Metric],
     author: author_list((
       (first_author("Alexander Städing Dominguez"), "alexander.staedingdominguez@unisg.ch"),
     )),
@@ -468,6 +468,7 @@ XOR is a valid distance metric #pause
 Nodes retain more routing information about closer nodes #pause
 - First, take large rough hops
 - Eventually, hops become smaller
+- $log n$ lookup time
 
 #pause
 
@@ -479,11 +480,80 @@ Nodes retain more routing information about closer nodes #pause
 
 == RPC Overview
 
-Four primary remote procedure calls
-- _ping_
-- _store_
-- _find\_node_
-- _find\_value_
+Four primary remote procedure calls #pause
+- *_ping_* Checks if node is online #pause
+- *_store_* Put key-value pair for later retrieval #pause
+- *_find\_node_* Returns the nearest $k$ nodes closest to target #pause
+- *_find\_value_* Like _find\_node_, but returns value if it exists locally
 
-// TODO: describe node lookup
-// TODO: load balancing by re-storing values
+== Node Lookup
+
+Recursive algorithm
+1. Local nodes picks $alpha$ (concurrency param.) nodes closest to target ID #pause
+2. Send concurrent, asynchronous _find\_node_ RPCs to the $alpha$ nodes #pause
+3. Resend _find\_node_ RPCs to closer nodes it has learned about #pause
+  - This recursion can begin before all $alpha$ nodes from previous RPCs have returned #pause
+  - Can also use latency information #pause
+4. Finish when desired key-value pair is found, or no closer nodes can be found
+
+== Maintenance
+
+- Key-value pairs must be frequently republished, otherwise they expire #pause
+  - The authors use a 24 hour expiration time for the use-case of file sharing #pause
+- Buckets are kept fresh by traffic going through them
+
+
+== Load Balancing
+
+#slide(
+  repeat: 4,
+  self => [
+    - Values are re-stored at nodes along the lookup path #pause
+    - Requests from different nodes eventually converge to the same path #pause
+
+
+    #v(2cm)
+    #dht-4-bit.gen-hops(((1, 10, 2), (10, 12, 0.75), (12, 13, 0.5)))
+    #dht-4-bit.gen-small()
+    #align(center)[
+      #canvas(
+        length: 1.7cm,
+        {
+          import draw: *
+          // to align with previous canvas
+          line((-0.5, 0), (15.5, 0), stroke: none)
+          if self.subslide >= 3 {
+            content((12, 1))[*Found*]
+          }
+          if self.subslide >= 4 {
+            content((10, 1))[*Stored*]
+          }
+        },
+      )
+    ]
+  ],
+)
+
+== Conclusion
+
+Kademlia has some very nice provable properties
+- Performance
+- Latency-minimizing routing
+- Symmetric, unidirectional topology
+- Concurrenty parameter $alpha$
+
+#pause
+
+Further discussion:
+- How to deal with poor locality?
+
+#pause
+
+#v(2cm)
+
+Sources
+#v(0cm)
+#text(size: 14pt)[
+  1. _Kademlia_ https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf
+  2. _Kademlia, Explained_ https://youtu.be/1QdKhNpsj8M?si=AqXuKQymffdI9bpF
+]
